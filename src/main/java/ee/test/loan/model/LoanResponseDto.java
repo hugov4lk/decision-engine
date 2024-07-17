@@ -10,7 +10,8 @@ import lombok.Getter;
 public class LoanResponseDto {
 
     private LoanDecision decision;
-    private BigDecimal approvedAmount;
-    private Integer approvedPeriod;
-    private Integer requestedPeriod;
+    private BigDecimal approvedLoanAmount;
+    private BigDecimal requestedLoanAmount;
+    private Integer approvedLoanPeriod;
+    private Integer requestedLoanPeriod;
 }

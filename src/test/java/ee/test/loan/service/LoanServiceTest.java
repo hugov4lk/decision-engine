@@ -37,11 +37,13 @@ class LoanServiceTest {
         assertThat(response)
                 .extracting(
                         LoanResponseDto::getDecision,
-                        LoanResponseDto::getApprovedAmount,
-                        LoanResponseDto::getApprovedPeriod,
-                        LoanResponseDto::getRequestedPeriod
+                        LoanResponseDto::getRequestedLoanAmount,
+                        LoanResponseDto::getApprovedLoanAmount,
+                        LoanResponseDto::getRequestedLoanPeriod,
+                        LoanResponseDto::getApprovedLoanPeriod
                 ).containsExactly(
                         LoanDecision.NEGATIVE,
+                        null,
                         null,
                         null,
                         null
@@ -53,53 +55,91 @@ class LoanServiceTest {
     }
 
     @Test
-    void givenSegment3_whenEvaluateLoan_thenPositiveDecision() {
+    void givenSegment3_whenEvaluateLoan_thenReturnsPositiveDecisionWithBiggerApprovedLoanAmount() {
+        BigDecimal newBiggerApprovedAmount = BigDecimal.valueOf(10000);
         LoanRequestDto loanRequest = mockLoanRequestDto();
         when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_3);
+        when(loanConfig.minAmount()).thenReturn(BigDecimal.valueOf(2000));
+        when(loanConfig.maxAmount()).thenReturn(BigDecimal.valueOf(10000));
 
         LoanResponseDto response = loanService.evaluateLoan(loanRequest);
         assertThat(response)
                 .extracting(
                         LoanResponseDto::getDecision,
-                        LoanResponseDto::getApprovedAmount,
-                        LoanResponseDto::getApprovedPeriod,
-                        LoanResponseDto::getRequestedPeriod
+                        LoanResponseDto::getRequestedLoanAmount,
+                        LoanResponseDto::getApprovedLoanAmount,
+                        LoanResponseDto::getRequestedLoanPeriod,
+                        LoanResponseDto::getApprovedLoanPeriod
                 ).containsExactly(
                         LoanDecision.POSITIVE,
                         loanRequest.loanAmount(),
+                        newBiggerApprovedAmount,
                         loanRequest.loanPeriod(),
                         loanRequest.loanPeriod()
                 );
 
         verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
-        verifyNoMoreInteractions(segmentService);
-        verifyNoInteractions(loanConfig);
+        verify(loanConfig).minAmount();
+        verify(loanConfig, times(2)).maxAmount();
+        verifyNoMoreInteractions(segmentService, loanConfig);
     }
 
     @Test
-    void givenSegment1AndMaxPeriod60_whenEvaluateLoan_thenPositiveDecisionAndApprovedPeriodLessThanRequested() {
-        int newApprovedPeriod = 50;
+    void givenSegment2_whenEvaluateLoan_thenReturnsPositiveDecisionWithSmallerApprovedLoanAmount() {
+        BigDecimal newSmallerApprovedAmount = BigDecimal.valueOf(3599);
         LoanRequestDto loanRequest = mockLoanRequestDto();
-        when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_1);
-        when(loanConfig.maxPeriod()).thenReturn(60);
+        when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_2);
+        when(loanConfig.minAmount()).thenReturn(BigDecimal.valueOf(2000));
+        when(loanConfig.maxAmount()).thenReturn(BigDecimal.valueOf(10000));
 
         LoanResponseDto response = loanService.evaluateLoan(loanRequest);
-
         assertThat(response)
                 .extracting(
                         LoanResponseDto::getDecision,
-                        LoanResponseDto::getApprovedAmount,
-                        LoanResponseDto::getApprovedPeriod,
-                        LoanResponseDto::getRequestedPeriod
+                        LoanResponseDto::getRequestedLoanAmount,
+                        LoanResponseDto::getApprovedLoanAmount,
+                        LoanResponseDto::getRequestedLoanPeriod,
+                        LoanResponseDto::getApprovedLoanPeriod
                 ).containsExactly(
                         LoanDecision.POSITIVE,
                         loanRequest.loanAmount(),
-                        newApprovedPeriod,
+                        newSmallerApprovedAmount,
+                        loanRequest.loanPeriod(),
                         loanRequest.loanPeriod()
                 );
 
         verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
-        verify(loanConfig).maxPeriod();
+        verify(loanConfig).minAmount();
+        verify(loanConfig, times(2)).maxAmount();
+        verifyNoMoreInteractions(segmentService, loanConfig);
+    }
+
+    @Test
+    void givenSegment1_whenEvaluateLoan_thenPositiveDecisionAndApprovedPeriodLessThanRequested() {
+        int newApprovedPeriod = 50;
+        LoanRequestDto loanRequest = mockLoanRequestDto();
+        when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_1);
+        when(loanConfig.minAmount()).thenReturn(BigDecimal.valueOf(2000));
+        when(loanConfig.maxAmount()).thenReturn(BigDecimal.valueOf(10000));
+        when(loanConfig.maxPeriod()).thenReturn(60);
+
+        LoanResponseDto response = loanService.evaluateLoan(loanRequest);
+        assertThat(response)
+                .extracting(
+                        LoanResponseDto::getDecision,
+                        LoanResponseDto::getRequestedLoanAmount,
+                        LoanResponseDto::getApprovedLoanAmount,
+                        LoanResponseDto::getRequestedLoanPeriod,
+                        LoanResponseDto::getApprovedLoanPeriod
+                ).containsExactly(
+                        LoanDecision.POSITIVE,
+                        loanRequest.loanAmount(),
+                        loanRequest.loanAmount(),
+                        loanRequest.loanPeriod(),
+                        newApprovedPeriod
+                );
+
+        verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
         verifyNoMoreInteractions(segmentService, loanConfig);
     }
 

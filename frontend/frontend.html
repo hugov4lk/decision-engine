@@ -47,22 +47,27 @@
             }
 
             function displayLoanDecision(data) {
-                const { decision, approvedAmount, approvedPeriod, requestedPeriod } = data;
+                const { decision, requestedLoanAmount, approvedLoanAmount, approvedLoanPeriod, requestedLoanPeriod } = data;
                 const resultElement = document.getElementById('result');
 
                 let message;
                 if (decision === 'NEGATIVE') {
                     message = `<p>Sorry, you are not eligible for a loan.</p>`;
                 } else {
-                    if (approvedPeriod === requestedPeriod) {
-                        message = `<p>You are eligible for a loan with the following details:</p>
-                        <p>Loan period (months): ${approvedPeriod}</p>
-                        <p>Loan amount: ${approvedAmount}</p>`;
-                    } else {
-                        message = `<p>You are not eligible for a loan with a ${requestedPeriod}-month loan period.</p>
+                    if (approvedLoanPeriod > requestedLoanPeriod) {
+                        message = `<p>You are not eligible for a loan with a ${requestedLoanPeriod}-month loan period.</p>
                         <p>We can offer you a loan with the following details:</p>
-                        <p>Loan period (months): ${approvedPeriod}</p>
-                        <p>Loan amount: ${approvedAmount}</p>`;
+                        <p>Loan period (months): ${approvedLoanPeriod}</p>
+                        <p>Loan amount: ${approvedLoanAmount}</p>`;
+                    } else if (approvedLoanAmount < requestedLoanAmount) {
+                        message = `<p>You are not eligible for a loan with amount of ${requestedLoanAmount}.</p>
+                        <p>We can offer you a loan with the following details:</p>
+                        <p>Loan period (months): ${approvedLoanPeriod}</p>
+                        <p>Loan amount: ${approvedLoanAmount}</p>`;
+                    } else {
+                        message = `<p>You are eligible for a loan with the following details:</p>
+                        <p>Loan period (months): ${approvedLoanPeriod}</p>
+                        <p>Loan amount: ${approvedLoanAmount}</p>`;
                     }
                 }
 

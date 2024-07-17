@@ -23,6 +23,7 @@ class LoanControllerIntegrationTest {
     private static final String PERSONAL_CODE_VALID = "49002010998";
     private static final String PERSONAL_CODE_INVALID = "49002010997";
     private static final String LOAN_AMOUNT_VALID = "5000";
+    private static final String MAX_LOAN_AMOUNT = "10000";
     private static final String LOAN_AMOUNT_INVALID = "1999";
     private static final String LOAN_PERIOD_VALID = "12";
     private static final String LOAN_PERIOD_INVALID = "11";
@@ -39,9 +40,10 @@ class LoanControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.decision").value(LoanDecision.POSITIVE.toString()))
-                .andExpect(jsonPath("$.approvedAmount").value(LOAN_AMOUNT_VALID))
-                .andExpect(jsonPath("$.approvedPeriod").value(LOAN_PERIOD_VALID))
-                .andExpect(jsonPath("$.requestedPeriod").value(LOAN_PERIOD_VALID));
+                .andExpect(jsonPath("$.requestedLoanAmount").value(LOAN_AMOUNT_VALID))
+                .andExpect(jsonPath("$.approvedLoanAmount").value(MAX_LOAN_AMOUNT))
+                .andExpect(jsonPath("$.approvedLoanPeriod").value(LOAN_PERIOD_VALID))
+                .andExpect(jsonPath("$.requestedLoanPeriod").value(LOAN_PERIOD_VALID));
     }
 
     @Test
