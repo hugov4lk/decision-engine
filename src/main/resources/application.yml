@@ -1,0 +1,11 @@
+server:
+  servlet:
+    context-path: /api
+
+decision-engine:
+  allowed-origins: http://localhost:63342,http://localhost:8080
+  loan:
+    min-amount: 2000
+    max-amount: 10000
+    min-period: 12
+    max-period: 60

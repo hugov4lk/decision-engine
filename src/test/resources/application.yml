@@ -1,0 +1,10 @@
+server:
+  servlet:
+    context-path: /api
+
+decision-engine:
+  loan:
+    min-amount: 2000
+    max-amount: 10000
+    min-period: 12
+    max-period: 60

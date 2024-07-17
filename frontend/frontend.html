@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Loan decision Engine</title>
+    </head>
+    <body>
+        <h1>Loan decision engine</h1>
+        <form id="loanForm">
+            <label for="personalCode">Personal code:</label>
+            <input type="text" id="personalCode" name="personalCode" pattern="^[1-6]{1}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])[0-9]{4}$" required>
+            <br>
+            <label for="loanAmount">Loan amount:</label>
+            <input type="number" id="loanAmount" name="loanAmount" min="2000" step="100" max="10000" required>
+            <br>
+            <label for="loanPeriod">Loan period (months):</label>
+            <input type="number" id="loanPeriod" name="loanPeriod" min="12" max="60" required>
+            <br>
+            <button type="button" onclick="evaluateLoan()">Submit</button>
+        </form>
+        <div id="result"></div>
+        <script>
+            function evaluateLoan() {
+                const form = document.getElementById('loanForm');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                const personalCode = document.getElementById('personalCode').value;
+                const loanAmount = document.getElementById('loanAmount').value;
+                const loanPeriod = document.getElementById('loanPeriod').value;
+
+                fetch(`http://localhost:8080/api/loan/evaluate?personalCode=${personalCode}&loanAmount=${loanAmount}&loanPeriod=${loanPeriod}`)
+                    .then(async response => {
+                        if (!response.ok) {
+                            if (response.status === 400) {
+                                const {errorCode, exception} = await response.json();
+                                throw new Error(`${errorCode}:${exception}`);
+                            }
+                            throw new Error('Internal server error');
+                        }
+                        return await response.json();
+                    })
+                .then(data => displayLoanDecision(data))
+                .catch(error => displayError(error));
+            }
+
+            function displayLoanDecision(data) {
+                const { decision, approvedAmount, approvedPeriod, requestedPeriod } = data;
+                const resultElement = document.getElementById('result');
+
+                let message;
+                if (decision === 'NEGATIVE') {
+                    message = `<p>Sorry, you are not eligible for a loan.</p>`;
+                } else {
+                    if (approvedPeriod === requestedPeriod) {
+                        message = `<p>You are eligible for a loan with the following details:</p>
+                        <p>Loan period (months): ${approvedPeriod}</p>
+                        <p>Loan amount: ${approvedAmount}</p>`;
+                    } else {
+                        message = `<p>You are not eligible for a loan with a ${requestedPeriod}-month loan period.</p>
+                        <p>We can offer you a loan with the following details:</p>
+                        <p>Loan period (months): ${approvedPeriod}</p>
+                        <p>Loan amount: ${approvedAmount}</p>`;
+                    }
+                }
+
+                resultElement.innerHTML = message;
+            }
+
+            function displayError(error) {
+                const resultElement = document.getElementById('result');
+                let errorMessage;
+
+                if (error.message.startsWith('UNKNOWN_PERSONAL_CODE') || error.message.startsWith('VALIDATION_FAILURE')) {
+                    errorMessage = `An error occurred: ${error.message.split(":")[1]}`;
+                } else {
+                    errorMessage = 'An error occurred. Please try again later.';
+                }
+
+                resultElement.innerHTML = `<p>${errorMessage}</p>`;
+            }
+        </script>
+    </body>
+</html>
