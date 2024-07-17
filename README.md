@@ -6,4 +6,4 @@
 
 ## Start front-end:
 
- - Open file 'frontend/frontend.html' in browser
+ - Open file `frontend/frontend.html` in browser
