@@ -24,7 +24,7 @@ public class LoanService {
             return LoanResponseDto.builder().decision(LoanDecision.NEGATIVE).build();
         }
 
-        BigDecimal creditScoreRatio = personSegment.getCreditModifier().divide(loanRequest.loanAmount(), 4, RoundingMode.HALF_EVEN);
+        BigDecimal creditScoreRatio = personSegment.getCreditModifier().divide(loanRequest.loanAmount(), 10, RoundingMode.HALF_EVEN);
         BigDecimal creditScore = creditScoreRatio.multiply(BigDecimal.valueOf(loanRequest.loanPeriod()));
         if (creditScore.compareTo(BigDecimal.ONE) >= 0) {
             return LoanResponseDto.builder()
