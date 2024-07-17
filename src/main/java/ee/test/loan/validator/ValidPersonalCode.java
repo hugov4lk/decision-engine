@@ -9,7 +9,7 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.PARAMETER })
+@Target({ElementType.PARAMETER})
 @Constraint(validatedBy = PersonalCodeValidator.class)
 public @interface ValidPersonalCode {
 
