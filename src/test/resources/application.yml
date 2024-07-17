@@ -3,6 +3,7 @@ server:
     context-path: /api
 
 decision-engine:
+  allowed-origins:
   loan:
     min-amount: 2000
     max-amount: 10000
