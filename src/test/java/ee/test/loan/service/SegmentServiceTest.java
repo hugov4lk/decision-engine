@@ -28,12 +28,12 @@ class SegmentServiceTest {
 
     @ParameterizedTest
     @MethodSource("personSegmentData")
-    void givenValidPersonalCode_whenGetSegmentByPersonalCode_thenExpectedSegmentReturned(String personalCode, Segment expectedSegment) {
+    void givenValidPersonalCode_whenGetSegmentByPersonalCode_thenReturnsExpectedSegment(String personalCode, Segment expectedSegment) {
         assertEquals(expectedSegment, segmentService.getSegmentByPersonalCode(personalCode));
     }
 
     @Test
-    void givenUnknownPersonalCode_whenGetSegmentByPersonalCode_thenExceptionThrown() {
+    void givenUnknownPersonalCode_whenGetSegmentByPersonalCode_thenThrowsException() {
         ServiceException exception = assertThrows(ServiceException.class, () -> segmentService.getSegmentByPersonalCode("unknown"));
         assertEquals("Unknown personal code", exception.getMessage());
         assertEquals(ServiceErrorCode.UNKNOWN_PERSONAL_CODE, exception.getErrorCode());

@@ -47,7 +47,7 @@ class LoanControllerIntegrationTest {
     }
 
     @Test
-    void whenEvaluateLoanWithInvalidPersonalCode_thenBadRequestAndExpectedErrorMessage() throws Exception {
+    void whenEvaluateLoanWithInvalidPersonalCode_thenReturnsBadRequestAndExpectedErrorMessage() throws Exception {
         mockMvc.perform(get(LOAN_EVALUATE_PATH)
                         .param("personalCode", PERSONAL_CODE_INVALID)
                         .param("loanAmount", LOAN_AMOUNT_VALID)
@@ -60,7 +60,7 @@ class LoanControllerIntegrationTest {
     }
 
     @Test
-    void whenEvaluateLoanWithInvalidLoanAmount_thenBadRequestAndExpectedErrorMessage() throws Exception {
+    void whenEvaluateLoanWithInvalidLoanAmount_thenReturnsBadRequestAndExpectedErrorMessage() throws Exception {
         mockMvc.perform(get(LOAN_EVALUATE_PATH)
                         .param("personalCode", PERSONAL_CODE_VALID)
                         .param("loanAmount", LOAN_AMOUNT_INVALID)
@@ -73,7 +73,7 @@ class LoanControllerIntegrationTest {
     }
 
     @Test
-    void whenEvaluateLoanWithInvalidLoanPeriod_thenBadRequestAndExpectedErrorMessage() throws Exception {
+    void whenEvaluateLoanWithInvalidLoanPeriod_thenReturnsBadRequestAndExpectedErrorMessage() throws Exception {
         mockMvc.perform(get(LOAN_EVALUATE_PATH)
                         .param("personalCode", PERSONAL_CODE_VALID)
                         .param("loanAmount", LOAN_AMOUNT_VALID)
@@ -86,7 +86,7 @@ class LoanControllerIntegrationTest {
     }
 
     @Test
-    void whenEvaluateLoanWithWrongParameterName_thenInternalServerError() throws Exception {
+    void whenEvaluateLoanWithWrongParameterName_thenReturnsInternalServerError() throws Exception {
         mockMvc.perform(get(LOAN_EVALUATE_PATH)
                         .param("wrongName", PERSONAL_CODE_VALID)
                         .contentType(MediaType.APPLICATION_JSON))
