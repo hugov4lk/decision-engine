@@ -73,11 +73,11 @@ public class LoanService {
     }
 
     private static BigDecimal getCreditScore(BigDecimal creditModifier, BigDecimal loanAmount, int loanPeriod) {
-        return getCreditScoreRatio(creditModifier, loanAmount).multiply(BigDecimal.valueOf(loanPeriod));
+        return getCreditScoreRatio(creditModifier, loanAmount).multiply(BigDecimal.valueOf(loanPeriod)).setScale(8, RoundingMode.HALF_EVEN);
     }
 
     private static BigDecimal getCreditScoreRatio(BigDecimal creditModifier, BigDecimal loanAmount) {
-        return creditModifier.divide(loanAmount, 10, RoundingMode.HALF_EVEN);
+        return creditModifier.divide(loanAmount, 12, RoundingMode.HALF_EVEN);
     }
 
     private static LoanResponseDto createNegativeLoanResponseDto() {

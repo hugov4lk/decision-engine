@@ -87,7 +87,7 @@ class LoanServiceTest {
 
     @Test
     void givenSegment2_whenEvaluateLoan_thenReturnsPositiveDecisionWithSmallerApprovedLoanAmount() {
-        BigDecimal newSmallerApprovedAmount = BigDecimal.valueOf(3599);
+        BigDecimal newSmallerApprovedAmount = BigDecimal.valueOf(3600);
         LoanRequestDto loanRequest = mockLoanRequestDto();
         when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_2);
         when(loanConfig.minAmount()).thenReturn(BigDecimal.valueOf(2000));
