@@ -63,7 +63,7 @@ public class LoanService {
             if (creditScore.compareTo(BigDecimal.ONE) >= 0) {
                 maxApprovedAmount = Optional.of(mid);
                 low = mid.add(BigDecimal.ONE);
-            } else if (creditScore.compareTo(BigDecimal.ONE) < 0){
+            } else if (creditScore.compareTo(BigDecimal.ONE) < 0) {
                 high = mid.subtract(BigDecimal.ONE);
             }
         }
