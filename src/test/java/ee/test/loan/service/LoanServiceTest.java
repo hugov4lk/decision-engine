@@ -29,7 +29,7 @@ class LoanServiceTest {
     private LoanService loanService;
 
     @Test
-    void givenDebtSegment_whenEvaluateLoan_thenNegativeDecision() {
+    void givenDebtSegment_whenEvaluateLoan_thenReturnsNegativeDecision() {
         LoanRequestDto loanRequest = mockLoanRequestDto();
         when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.DEBT);
 
@@ -115,7 +115,7 @@ class LoanServiceTest {
     }
 
     @Test
-    void givenSegment1_whenEvaluateLoan_thenPositiveDecisionAndApprovedPeriodLessThanRequested() {
+    void givenSegment1_whenEvaluateLoan_thenReturnsPositiveDecisionAndApprovedPeriodLessThanRequested() {
         int newApprovedPeriod = 50;
         LoanRequestDto loanRequest = mockLoanRequestDto();
         when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_1);

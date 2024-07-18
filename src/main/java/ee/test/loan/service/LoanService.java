@@ -81,7 +81,9 @@ public class LoanService {
     }
 
     private static LoanResponseDto createNegativeLoanResponseDto() {
-        return LoanResponseDto.builder().decision(LoanDecision.NEGATIVE).build();
+        return LoanResponseDto.builder()
+                .decision(LoanDecision.NEGATIVE)
+                .build();
     }
 
     private static LoanResponseDto.LoanResponseDtoBuilder createPositiveLoanResponseDtoBuilder(LoanRequestDto loanRequest) {
