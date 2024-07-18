@@ -49,9 +49,9 @@ class LoanServiceTest {
                         null
                 );
 
-        verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
-        verifyNoMoreInteractions(segmentService);
-        verifyNoInteractions(loanConfig);
+        var inOrder = inOrder(segmentService, loanConfig);
+        inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -78,10 +78,11 @@ class LoanServiceTest {
                         loanRequest.loanPeriod()
                 );
 
-        verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
-        verify(loanConfig).minAmount();
-        verify(loanConfig, times(2)).maxAmount();
-        verifyNoMoreInteractions(segmentService, loanConfig);
+        var inOrder = inOrder(segmentService, loanConfig);
+        inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
+        inOrder.verify(loanConfig).minAmount();
+        inOrder.verify(loanConfig, times(2)).maxAmount();
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -108,10 +109,11 @@ class LoanServiceTest {
                         loanRequest.loanPeriod()
                 );
 
-        verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
-        verify(loanConfig).minAmount();
-        verify(loanConfig, times(2)).maxAmount();
-        verifyNoMoreInteractions(segmentService, loanConfig);
+        var inOrder = inOrder(segmentService, loanConfig);
+        inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
+        inOrder.verify(loanConfig).minAmount();
+        inOrder.verify(loanConfig, times(2)).maxAmount();
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -139,8 +141,12 @@ class LoanServiceTest {
                         newApprovedPeriod
                 );
 
-        verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
-        verifyNoMoreInteractions(segmentService, loanConfig);
+        var inOrder = inOrder(segmentService, loanConfig);
+        inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
+        inOrder.verify(loanConfig).minAmount();
+        inOrder.verify(loanConfig, times(2)).maxAmount();
+        inOrder.verify(loanConfig).maxPeriod();
+        inOrder.verifyNoMoreInteractions();
     }
 
     private static LoanRequestDto mockLoanRequestDto() {

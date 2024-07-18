@@ -30,9 +30,10 @@ class LoanPeriodValidatorTest {
 
         assertTrue(loanPeriodValidator.isValid(period, null));
 
-        verify(loanConfig).minPeriod();
-        verify(loanConfig).maxPeriod();
-        verifyNoMoreInteractions(loanConfig);
+        var inOrder = inOrder(loanConfig);
+        inOrder.verify(loanConfig).minPeriod();
+        inOrder.verify(loanConfig).maxPeriod();
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -41,8 +42,9 @@ class LoanPeriodValidatorTest {
 
         assertFalse(loanPeriodValidator.isValid(0, null));
 
-        verify(loanConfig).minPeriod();
-        verifyNoMoreInteractions(loanConfig);
+        var inOrder = inOrder(loanConfig);
+        inOrder.verify(loanConfig).minPeriod();
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -52,8 +54,9 @@ class LoanPeriodValidatorTest {
 
         assertFalse(loanPeriodValidator.isValid(3, null));
 
-        verify(loanConfig).minPeriod();
-        verify(loanConfig).maxPeriod();
-        verifyNoMoreInteractions(loanConfig);
+        var inOrder = inOrder(loanConfig);
+        inOrder.verify(loanConfig).minPeriod();
+        inOrder.verify(loanConfig).maxPeriod();
+        inOrder.verifyNoMoreInteractions();
     }
 }

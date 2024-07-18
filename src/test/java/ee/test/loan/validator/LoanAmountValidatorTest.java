@@ -32,9 +32,10 @@ class LoanAmountValidatorTest {
 
         assertTrue(loanAmountValidator.isValid(BigDecimal.valueOf(amount), null));
 
-        verify(loanConfig).minAmount();
-        verify(loanConfig).maxAmount();
-        verifyNoMoreInteractions(loanConfig);
+        var inOrder = inOrder(loanConfig);
+        inOrder.verify(loanConfig).minAmount();
+        inOrder.verify(loanConfig).maxAmount();
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -43,8 +44,9 @@ class LoanAmountValidatorTest {
 
         assertFalse(loanAmountValidator.isValid(BigDecimal.ZERO, null));
 
-        verify(loanConfig).minAmount();
-        verifyNoMoreInteractions(loanConfig);
+        var inOrder = inOrder(loanConfig);
+        inOrder.verify(loanConfig).minAmount();
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -54,8 +56,9 @@ class LoanAmountValidatorTest {
 
         assertFalse(loanAmountValidator.isValid(BigDecimal.valueOf(3), null));
 
-        verify(loanConfig).minAmount();
-        verify(loanConfig).maxAmount();
-        verifyNoMoreInteractions(loanConfig);
+        var inOrder = inOrder(loanConfig);
+        inOrder.verify(loanConfig).minAmount();
+        inOrder.verify(loanConfig).maxAmount();
+        inOrder.verifyNoMoreInteractions();
     }
 }
