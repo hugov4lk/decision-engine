@@ -81,7 +81,7 @@ class LoanServiceTest {
         var inOrder = inOrder(segmentService, loanConfig);
         inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
         inOrder.verify(loanConfig).minAmount();
-        inOrder.verify(loanConfig, times(2)).maxAmount();
+        inOrder.verify(loanConfig, times(1)).maxAmount();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -112,7 +112,7 @@ class LoanServiceTest {
         var inOrder = inOrder(segmentService, loanConfig);
         inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
         inOrder.verify(loanConfig).minAmount();
-        inOrder.verify(loanConfig, times(2)).maxAmount();
+        inOrder.verify(loanConfig, times(1)).maxAmount();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -122,7 +122,6 @@ class LoanServiceTest {
         LoanRequestDto loanRequest = mockLoanRequestDto();
         when(segmentService.getSegmentByPersonalCode(loanRequest.personalCode())).thenReturn(Segment.SEGMENT_1);
         when(loanConfig.minAmount()).thenReturn(BigDecimal.valueOf(2000));
-        when(loanConfig.maxAmount()).thenReturn(BigDecimal.valueOf(10000));
         when(loanConfig.maxPeriod()).thenReturn(60);
 
         LoanResponseDto response = loanService.evaluateLoan(loanRequest);
@@ -144,7 +143,6 @@ class LoanServiceTest {
         var inOrder = inOrder(segmentService, loanConfig);
         inOrder.verify(segmentService).getSegmentByPersonalCode(loanRequest.personalCode());
         inOrder.verify(loanConfig).minAmount();
-        inOrder.verify(loanConfig, times(2)).maxAmount();
         inOrder.verify(loanConfig).maxPeriod();
         inOrder.verifyNoMoreInteractions();
     }

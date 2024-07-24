@@ -52,24 +52,12 @@ public class LoanService {
     }
 
     private Optional<BigDecimal> calculateMaxLoanAmount(BigDecimal creditModifier, int loanPeriod) {
-        BigDecimal low = loanConfig.minAmount();
-        BigDecimal high = loanConfig.maxAmount();
-        Optional<BigDecimal> maxApprovedAmount = Optional.empty();
-
-        while (low.compareTo(high) <= 0) {
-            BigDecimal mid = low.add(high).divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
-            BigDecimal creditScore = getCreditScore(creditModifier, mid, loanPeriod);
-
-            if (creditScore.compareTo(BigDecimal.ONE) >= 0) {
-                maxApprovedAmount = Optional.of(mid);
-                low = mid.add(BigDecimal.ONE);
-            } else if (creditScore.compareTo(BigDecimal.ONE) < 0) {
-                high = mid.subtract(BigDecimal.ONE);
-            }
+        BigDecimal maxApprovedAmount = creditModifier.multiply(BigDecimal.valueOf(loanPeriod));
+        if (maxApprovedAmount.compareTo(loanConfig.minAmount()) >= 0) {
+            BigDecimal maxLoanAmount = loanConfig.maxAmount();
+            return Optional.of(maxApprovedAmount.compareTo(maxLoanAmount) > 0 ? maxLoanAmount : maxApprovedAmount);
         }
-
-        BigDecimal maxAmount = loanConfig.maxAmount();
-        return maxApprovedAmount.map(amount -> amount.compareTo(maxAmount) > 0 ? maxAmount : amount);
+        return Optional.empty();
     }
 
     private static BigDecimal getCreditScore(BigDecimal creditModifier, BigDecimal loanAmount, int loanPeriod) {
